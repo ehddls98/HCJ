@@ -236,7 +236,7 @@
     padding-right: 91px;
 }
 
-.form-item::after {
+.form-item::before {
     content: "";
     position: absolute;
     top: 10px;
@@ -250,11 +250,11 @@
     height: 30px;
 }
 
-.user-item::after {
+.user-item::before {
     background-position: -342px -64px;
 }
 
-.user-item::before {
+.user-item::after {
     content: "@naver.com";
     position: absolute;
     transform: translateY(-50%);
@@ -265,11 +265,11 @@
     font-size: 15px;
 }
 
-.password-item::after {
+.password-item::before {
     background-position: -310px 0px;
 }
 
-.password-item::before {
+.password-item::after {
     content: "";
     position: absolute;
     transform: translateY(-50%);
@@ -285,22 +285,22 @@
     background-position: -256px -264px;
 }
 
-.email-item::after {
+.email-item::before {
     background-position: -96px -296px;
 }
 
-.name-item::after {
+.name-item::before {
     background-position: -342px -64px;
 }
 
-.birthday-item::after {
+.birthday-item::before {
     background-position: -192px -296px;
 }
 
-.telecom-item::after {
+.telecom-item::before {
     background-position: -224px -296px;
 }
 
-.phone-item::after {
+.phone-item::before {
     background-position: -310px -128px;
 }  
