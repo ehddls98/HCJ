@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //JSON(Javascript Object Notation) 데이터 전송 표준 객체 
+        const user =  {
+            username: "aa",
+            password: "1234",
+            name: "김동인",
+        }
+
+        const jsonUser = JSON.stringify(user); //객체를 문자열로 변환
+        const jsonParseUser = JSON.parse(jsonUser); //문자열을 객체로 변환
+
+        console.log(user);
+        console.log(jsonUser);
+        console.log(jsonParseUser);
+
+        console.log(user.username);
+        console.log(jsonUser.username); //undefined : jsonUser는 문자열이기 때문에 username이라는 프로퍼티를 참조할 수 없다. 
+        console.log(jsonParseUser.username); //jsonParseUser는 객체이기 때문에 username이라는 프로퍼티를 참조할 수 있다.
+
+        const users = [ user, {...user, username: "bbb"}];
+        console.log(users);
+        const jsonUsers = JSON.stringify(users);
+        console.log(jsonUsers);
+        const jsonParseUsers = JSON.parse(jsonUsers);
+        console.log(jsonParseUsers);
+
+        
+        /**
+         * "{
+         *    "key": "value",
+         *    "key2": "value2"
+         * }"
+         */
+    </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" onkeydown="addText(event)">
+    <script>
+        const textInput = document.querySelector('input');
+        const lsTextList = localStorage.getItem("list");
+        console.log(lsTextList);
+        let textList = !lsTextList ? [] : JSON.parse(lsTextList); //만약에 페이지를 열었을때 lsTextList가 null이면 빈 배열을 할당하고, 아니면 JSON.parse(lsTextList)를 할당한다.
+
+        function addText(e) {
+            const textValue = e.target.value;
+            if(e.keyCode === 13) {
+                textList = [ ...textList, textValue ];
+                e.target.value = "";
+                console.log(textList);
+                localStorage.setItem("list", JSON.stringify(textList)); //setItem(key, value);
+            }
+        }
+    </script>
+</body>
+</html>
