@@ -21,7 +21,7 @@ function renderTable() {
     userTableBody.innerHTML = userList.map(({id, name, username, password}, index) => { //innerHTML은 ``안의 값을 태그로 인식
         return `
             <tr>
-                <th><input type="checkbox" onchange="handleUserCheck(event)"></th>
+                <th><input type="checkbox" onchange="handleUserCheck(event)" value="${id}"></th>
                 <td>${index + 1}</td>
                 <td>${id}</td>
                 <td>${name}</td>
@@ -55,26 +55,42 @@ function handleUserInputKeyDown(e) {
             passwordInput.focus();  //password 입력란으로 focus를 옮긴다.
         }
         if(e.target.name === "password") { //엔터키를 입력했을 때 password 입력란에 focus가 있다면 
-            userList = [ ...userList, { ...user, id: getNewId() } ]; 
-            //userList = [ ...userList, user ]; 
-            //-> 31번 줄처럼 어차피 기존 user 객체가 아닌 새로운 객체를 생성하여 값을 대입하는 경우 이렇게 작성해야 한다.
-            //[...userList] -> 기존의 userList를 스프레드로 복사해 오고
-            //{...user} -> 깊은 복사를 통해 새로운 객체로 복사를 해서 각 객체의 주소값이 겹치지 않도록 하기 위해 사용
+            if(inputMode === 1) {
+                const newUser =  {
+                    ...user,
+                    id: getNewId()
+                }
+                userList = [ ...userList, newUser ]; 
+            }
+
+            if(inputMode === 2) {
+                let findIndex = -1;
+                for(let i = 0; i< userList.length; i++) {
+                    if(userList[i].id === user.id) {
+                        findIndex = i;
+                        break;
+                    }
+                }
+                if(findIndex === -1) {
+                    alert("사용자 정보 수정 중 오류 발생. 관리자에게 문의하세요.");
+                    return;
+                }
+                userList[findIndex] = user;
+            }        
             
             saveUserList();
             renderTable(); 
+            clearInputValue(); 
             
-            nameInput.value = emptyUser.name; //name 입력란을 비운다
-            usernameInput.value = emptyUser.username; //username 입력란을 비운다
-            passwordInput.value = emptyUser.password; //password 입력란을 비운다
             
-            nameInput.focus(); //name 입력란으로 focus가 가게 한다.            
+            nameInput.focus(); //name 입력란으로 focus가 가게 한다.    
         }
     }
 }
 
 function saveUserList() {
-    localStorage.setItem("userList", JSON.stringify(userList));
+    localStorage.setItem("userList", JSON.stringify(userList)); 
+    //userList를 JSON 문자열로 변환하여 localStorage에 저장
 }
 
 function loadUserList() {
@@ -84,17 +100,64 @@ function loadUserList() {
 }
 
 function deleteUser(e) {
-    userList = userList.filter(({id}) => id !== parseInt(e.target.value));
+    userList = userList.filter(({id}) => id !== parseInt(e.target.value)); 
+    //userlist에서 id값이 삭제를 누른 객체의 id와 같지 않은 요소들만 필터링하여 새로운 배열에 저장
     saveUserList();
     renderTable();
 }
 
 function getNewId() {
-    const userIds = userList.map(user => user.id);
-    const maxUserId = userIds.length === 0 ? 20240000 : Math.max.apply(null, userIds);
+    const userIds = userList.map(user => user.id); //userList에서 user들의 id값들만 추출하여 userIds 변수에 저장
+    const maxUserId = userIds.length === 0 ? 20240000 : Math.max.apply(null, userIds); 
+    //userIds의 길이가 0이라면 20240000을 maxUserId에 저장하고, 그렇지 않다면 userIds의 최대값을 maxUserId에 저장
     return maxUserId + 1;
+    //maxUserId에 1을 더한 값을 반환
 }
 
 function handleUserCheck(e) {
-    
+    const checkBoxList = document.querySelectorAll("input[type='checkbox']"); 
+    //html 문서에서 checkbox 타입의 input 태그를 찾아서 checkBoxList 변수에 대입
+        for(let checkBox of checkBoxList) { //checkBoxList의 길이만큼 반복
+            if(checkBox === e.target) { //현재 체크한 checkBox가 checkBoxList의 i번째 요소와 같다면
+                continue; //다음 요소로 넘어간다.
+            }
+            checkBox.checked = false; //현재 체크한 요소가 checkBoxList의 i번째 요소와 다르다면 체크를 해제한다.
+        }
+
+        if(e.target.checked) { 
+            inputMode = 2; //수정 모드로 전환
+            const [ findUser ] = userList.filter(user => user.id === parseInt(e.target.value));
+            setInputValue(findUser);
+            user = {
+                ...findUser
+            }
+            return;
+    }
+
+    clearInputValue();  
 }
+function setInputValue(user) {
+    const nameInput = document.querySelector(".name-input"); 
+    const usernameInput = document.querySelector(".username-input"); 
+    const passwordInput = document.querySelector(".password-input"); 
+    nameInput.value = user.name; //입력란에 findUser의 name값을 대입
+    nameInput.value = user.name; //입력란에 findUser의 name값을 대입
+    usernameInput.value = user.username; //입력란에 findUser의 username값을 대입
+    passwordInput.value = user.password; //입력란에 findUser의 password값을 대입
+}
+
+function clearInputValue() {
+    const nameInput = document.querySelector(".name-input"); 
+    const usernameInput = document.querySelector(".username-input"); 
+    const passwordInput = document.querySelector(".password-input"); 
+    nameInput.value = emptyUser.name; //name 입력란을 비운다
+    usernameInput.value = emptyUser.username; //username 입력란을 비운다
+    passwordInput.value = emptyUser.password; //password 입력란을 비운다
+
+    inputMode = 1; //추가 모드로 전환
+    user = {
+        ...emptyUser
+    }
+}
+
+
