@@ -14,11 +14,11 @@ function handleTodoOkClick(e) { //확인 버튼을 누르면
         clearTodoInput(); //todo 입력란을 비운다.
         return;
     }
-    addTodo(); //todo 입력란이 공백이 아니면 todo를 추가한다. 
+    addTodo(); //todo 입력란이 공백이 아니면 todo를 객체를 생성한다. 
     clearTodoInput(); //todo 입력란을 비운다
 }
 
-function addTodo() { //todo를 추가하는 함수
+function addTodo() { //todo를 객체를 생성하는 함수
     const todo = { //todo 객체 생성
         id: createNewId(),
         content: document.querySelector(".todo-input").value,
